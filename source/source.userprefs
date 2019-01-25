@@ -1,0 +1,16 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Script/Planet.cs">
+    <Files>
+      <File FileName="Assets/Script/LevelBuilder.cs" Line="31" Column="3" />
+      <File FileName="Assets/Script/Player.cs" Line="22" Column="2" />
+      <File FileName="Assets/Script/Planet.cs" Line="30" Column="3" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <RunToCursorBreakpoint file="/Users/mustafatufan/Desktop/git/pale-blue-dot/source/Assets/Script/Planet.cs" line="11" column="22" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
