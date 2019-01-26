@@ -23,10 +23,7 @@ public class LevelBuilder : MonoBehaviour
 
 	void Start ()
 	{
-		for (int i = 0; i < getPlanetCount (); i++) {
-			GameObject planet = GeneratePlanet (getPlanetSpeed ()*getOrbit (), getPlanetRadius (), getPlanetPosition (), getPlanetSize (), getPlanetDelay (), getPlanetHealth (), getPlanetReduceRate (), SelectContinent (PlanetContinent));
-			PlanetList.Add (planet);
-		}
+		StartRound ();
 	}
 
 	void Update ()
@@ -41,7 +38,27 @@ public class LevelBuilder : MonoBehaviour
 		}
 	}
 
-	private GameObject GeneratePlanet (float speed, float radius, float position, float size, float delay, float health, float reduceRate, Sprite continent)
+	private void StartRound()
+	{
+		GameLogic.Instance.CurrentStatus = GameLogic.Status.Shoot;
+		for (int i = 0; i < getPlanetCount (); i++) {
+			GameObject planet = GeneratePlanet (getPlanetSpeed ()*getOrbit (), getPlanetRadius (), getPlanetPosition (), getPlanetSize (), getPlanetDelay (), getPlanetHealth (), getPlanetReduceRate (), GetPlanetAngle (), SelectContinent (PlanetContinent));
+			PlanetList.Add (planet);
+		}
+	}
+
+	public void FinishRound()
+	{
+		foreach (GameObject planet in PlanetList) {
+			if (Player.Instance.Target.transform != planet.transform) {
+				Destroy (planet);
+			}
+		}
+		PlanetList.Clear ();
+		StartRound ();
+	}
+
+	private GameObject GeneratePlanet (float speed, float radius, float position, float size, float delay, float health, float reduceRate, float angle, Sprite continent)
 	{
 		float x = Player.Instance.transform.position.x + getHorizantalChange ();
 		float y = Player.Instance.transform.position.y + (getOrbit () * radius) + position + 3;
@@ -53,6 +70,7 @@ public class LevelBuilder : MonoBehaviour
 		planet.GetComponent<Planet> ().health = health;
 		planet.GetComponent<Planet> ().reduceRate = reduceRate;
 		planet.GetComponent<Planet> ().continent = continent;
+		planet.GetComponent<Planet> ().Angle = angle;
 		return planet;
 	}
 
@@ -94,6 +112,11 @@ public class LevelBuilder : MonoBehaviour
 	private float getPlanetHealth ()
 	{
 		return Random.Range (50.0f, 130.0f);
+	}
+
+	private float GetPlanetAngle ()
+	{
+		return Random.Range (-1.0f, 1.0f);
 	}
 
 	private float getPlanetReduceRate ()

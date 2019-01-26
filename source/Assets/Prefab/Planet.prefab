@@ -276,6 +276,7 @@ MonoBehaviour:
   reduceRate: 0
   continent: {fileID: 0}
   slow: 0
+  stop: 0
 --- !u!212 &212098003392805586
 SpriteRenderer:
   m_ObjectHideFlags: 1

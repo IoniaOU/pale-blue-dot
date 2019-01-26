@@ -16,13 +16,14 @@ public class Planet : MonoBehaviour
 	public Sprite continent;
 
 	private Vector2 _centre;
-	private float _angle;
+	public float Angle;
 	private bool _run = true;
 
 	private float _currentSpeed;
 	private float _slowSpeed;
 
 	public bool slow;
+	public bool stop = false;
 
 
 	void Start ()
@@ -46,18 +47,35 @@ public class Planet : MonoBehaviour
 			ChangePosition ();
 			ReduceHealth ();
 		}
+
+		FadeOut ();
+	}
+
+	void OnMouseDown ()
+	{
+		if (GameLogic.Instance.CurrentStatus == GameLogic.Status.Shoot) {
+			Player.Instance.Target = this.gameObject;
+			LevelBuilder.Instance.StopPlanets ();
+			GameLogic.Instance.CurrentStatus = GameLogic.Status.Lift;
+			LevelBuilder.Instance.PlanetList.Remove (gameObject);
+			gameObject.GetComponent<Planet> ().enabled = false;
+
+		}
 	}
 
 	public void Stop ()
 	{
-		_run = false; 
+		stop = true;
 	}
 
 	private void ChangePosition ()
 	{
-		_angle += _currentSpeed * Time.deltaTime;
-		var offset = new Vector2 (Mathf.Sin (_angle), Mathf.Cos (_angle)) * Radius;
-		transform.position = _centre + offset;
+		if (GameLogic.Instance.CurrentStatus == GameLogic.Status.Shoot) {
+
+			Angle += _currentSpeed * Time.deltaTime;
+			var offset = new Vector2 (Mathf.Sin (Angle), Mathf.Cos (Angle)) * Radius;
+			transform.position = _centre + offset;
+		}
 	}
 
 	private void ReduceHealth ()
@@ -73,10 +91,28 @@ public class Planet : MonoBehaviour
 
 	private void ChangeSpeed ()
 	{
+		
 		if (slow) {
 			_currentSpeed = Mathf.Lerp (_currentSpeed, _slowSpeed, 0.1f);
+		} else if (stop) {
+			_currentSpeed = Mathf.Lerp (_currentSpeed, 0, 0.1f);
 		} else {
 			_currentSpeed = Mathf.Lerp (_currentSpeed, RotateSpeed, 0.1f);
+		}
+	}
+
+	private void FadeOut ()
+	{
+		if (GameLogic.Instance.CurrentStatus == GameLogic.Status.Lift || GameLogic.Instance.CurrentStatus == GameLogic.Status.Travel || GameLogic.Instance.CurrentStatus == GameLogic.Status.Landing) {
+			if (Player.Instance.Target.transform != gameObject.transform) {
+				gameObject.GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+				gameObject.transform.GetChild (0).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (0).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+				gameObject.transform.GetChild (1).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (1).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+				gameObject.transform.GetChild (2).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (2).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+				gameObject.transform.GetChild (3).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (3).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+				gameObject.transform.GetChild (4).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (4).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+				gameObject.transform.GetChild (5).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (5).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+			}
 		}
 	}
 }

@@ -16,7 +16,7 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
-	public enum Status {Shoot, Zoomin, Lift, Travel, Landing, Zoomout, Gameover};
+	public enum Status {Shoot, Lift, Travel, Landing, RoundOver, StartAgain, Gameover};
 
 	public Status CurrentStatus;
 
