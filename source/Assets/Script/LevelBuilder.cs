@@ -19,11 +19,13 @@ public class LevelBuilder : MonoBehaviour
 
 	public GameObject Planet;
 	public Sprite[] PlanetContinent;
+	public List<GameObject> PlanetList = new List<GameObject>();
 
 	void Start ()
 	{
 		for (int i = 0; i < getPlanetCount (); i++) {
-			GeneratePlanet (getPlanetSpeed (), getPlanetRadius (), getPlanetPosition (), getPlanetSize (), getPlanetDelay (), getPlanetHealth (), getPlanetReduceRate (), SelectContinent (PlanetContinent));
+			GameObject planet = GeneratePlanet (getPlanetSpeed ()*getOrbit (), getPlanetRadius (), getPlanetPosition (), getPlanetSize (), getPlanetDelay (), getPlanetHealth (), getPlanetReduceRate (), SelectContinent (PlanetContinent));
+			PlanetList.Add (planet);
 		}
 	}
 
@@ -32,7 +34,14 @@ public class LevelBuilder : MonoBehaviour
 		
 	}
 
-	private void GeneratePlanet (float speed, float radius, float position, float size, float delay, float health, float reduceRate, Sprite continent)
+	public void StopPlanets()
+	{
+		foreach (GameObject planet in PlanetList) {
+			planet.GetComponent<Planet> ().Stop ();
+		}
+	}
+
+	private GameObject GeneratePlanet (float speed, float radius, float position, float size, float delay, float health, float reduceRate, Sprite continent)
 	{
 		float x = Player.Instance.transform.position.x + getHorizantalChange ();
 		float y = Player.Instance.transform.position.y + (getOrbit () * radius) + position + 3;
@@ -44,6 +53,7 @@ public class LevelBuilder : MonoBehaviour
 		planet.GetComponent<Planet> ().health = health;
 		planet.GetComponent<Planet> ().reduceRate = reduceRate;
 		planet.GetComponent<Planet> ().continent = continent;
+		return planet;
 	}
 
 	private int getPlanetCount ()
