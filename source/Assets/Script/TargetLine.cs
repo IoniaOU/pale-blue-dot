@@ -15,20 +15,24 @@ public class TargetLine : MonoBehaviour {
 			return _instance;
 		}
 	}
+
+	private Vector3 virtualTarget;
+
+	private void LerpToTarget()
+	{
+		
+	}
 	
-	// Update is called once per frame
 	void Update () {
 		GameObject possibleTarget = FindTarget ();
-
 		if (possibleTarget != null && GameLogic.Instance.CurrentStatus == GameLogic.Status.Shoot) {
 			gameObject.GetComponent<LineRenderer> ().enabled = true;
 			this.GetComponent<LineRenderer> ().SetPosition (0, Player.Instance.gameObject.transform.position);
-			this.GetComponent<LineRenderer> ().SetPosition (1, possibleTarget.transform.position);
+			virtualTarget = Vector3.Lerp (virtualTarget, possibleTarget.transform.position, 0.2f);
+			this.GetComponent<LineRenderer> ().SetPosition (1, virtualTarget);
 		} else {
 			gameObject.GetComponent<LineRenderer> ().enabled = false;
 		}
-
-
 	}
 
 	public GameObject FindTarget()

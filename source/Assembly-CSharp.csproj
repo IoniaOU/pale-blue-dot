@@ -57,6 +57,7 @@
      <Compile Include="Assets\Script\LevelBuilder.cs" />
      <Compile Include="Assets\Script\Planet.cs" />
      <Compile Include="Assets\Script\Player.cs" />
+     <Compile Include="Assets\Script\ScoreManager.cs" />
      <Compile Include="Assets\Script\Slower.cs" />
      <Compile Include="Assets\Script\TargetLine.cs" />
      <None Include="Assets\FullTiltBoogie\Helpers\readme.txt" />

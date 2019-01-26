@@ -82,6 +82,7 @@ public class Player : MonoBehaviour
 		if (Vector3.Distance (Camera.main.transform.position, diff) < 0.01f) {
 			Debug.Log ("Landing finished.");
 			LevelBuilder.Instance.FinishRound ();
+			gameObject.transform.GetChild (0).GetComponent<AudioSource> ().Play ();
 		}
 	}
 
@@ -91,6 +92,8 @@ public class Player : MonoBehaviour
 			if (Input.touchCount > 0 || Input.GetKeyDown (KeyCode.Space)) {
 				Player.Instance.Target = TargetLine.Instance.FindTarget ();
 				if (Target != null) {
+					ScoreManager.Instance.Animate ();
+					gameObject.GetComponent<AudioSource> ().Play ();
 					LevelBuilder.Instance.StopPlanets ();
 					GameLogic.Instance.CurrentStatus = GameLogic.Status.Lift;
 					LevelBuilder.Instance.PlanetList.Remove (gameObject);

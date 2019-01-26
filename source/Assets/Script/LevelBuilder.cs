@@ -54,6 +54,7 @@ public class LevelBuilder : MonoBehaviour
 				Destroy (planet);
 			}
 		}
+		ScoreManager.Instance.IncreaseScore ();
 		PlanetList.Clear ();
 		StartRound ();
 	}
