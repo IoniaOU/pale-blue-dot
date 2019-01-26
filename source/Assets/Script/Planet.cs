@@ -25,12 +25,21 @@ public class Planet : MonoBehaviour
 	public bool slow;
 	public bool stop = false;
 
+	private Color _desertGrass = new Color (223.0f / 255.0f, 112.0f / 255.0f, 30.0f / 255.0f, 1.0f);
+	private Color _desertSoil = new Color (197.0f / 255.0f, 99.0f / 255.0f, 25.0f / 255.0f, 1.0f);
+	private Color _desertSea = new Color (172.0f / 255.0f, 87.0f / 255.0f, 21.0f / 255.0f, 1.0f);
+	private Color _fadeOut = new Color (1.0f, 1.0f, 1.0f, 0.0f);
+
+	private float _colorSpeed = 0.01f;
 
 	void Start ()
 	{
 		_currentSpeed = RotateSpeed;
 		gameObject.transform.GetChild (3).GetComponent<SpriteRenderer> ().sprite = continent;
 		gameObject.transform.GetChild (4).GetComponent<SpriteRenderer> ().sprite = continent;
+		gameObject.transform.GetChild (5).transform.localPosition = GenerateCloudPosition ();
+		gameObject.transform.GetChild (6).transform.localPosition = GenerateCloudPosition ();
+
 		_centre = transform.position;
 		if (RotateSpeed > 0) {
 			_slowSpeed = 0.1f;
@@ -51,18 +60,6 @@ public class Planet : MonoBehaviour
 		FadeOut ();
 	}
 
-	void OnMouseDown ()
-	{
-		if (GameLogic.Instance.CurrentStatus == GameLogic.Status.Shoot) {
-			Player.Instance.Target = this.gameObject;
-			LevelBuilder.Instance.StopPlanets ();
-			GameLogic.Instance.CurrentStatus = GameLogic.Status.Lift;
-			LevelBuilder.Instance.PlanetList.Remove (gameObject);
-			gameObject.GetComponent<Planet> ().enabled = false;
-
-		}
-	}
-
 	public void Stop ()
 	{
 		stop = true;
@@ -80,13 +77,24 @@ public class Planet : MonoBehaviour
 
 	private void ReduceHealth ()
 	{
-		health -= Time.deltaTime * reduceRate;
-		ChangeColor ();
+		health -= Time.deltaTime;
+
 	}
 
-	private void ChangeColor ()
+	public void ChangeColor ()
 	{
-		gameObject.GetComponent<SpriteRenderer> ().color = new Color (35 / 255, 110 / 255, ((health + 65) + 27) / 255);
+		gameObject.GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.GetComponent<SpriteRenderer> ().color, _desertSea, 0.01f);
+
+		gameObject.transform.GetChild (0).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (0).GetComponent<SpriteRenderer> ().color, _fadeOut, _colorSpeed);
+		gameObject.transform.GetChild (1).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (1).GetComponent<SpriteRenderer> ().color, _fadeOut, _colorSpeed);
+		gameObject.transform.GetChild (2).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (2).GetComponent<SpriteRenderer> ().color, _fadeOut, _colorSpeed);
+
+		gameObject.transform.GetChild (3).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (3).GetComponent<SpriteRenderer> ().color, _desertSoil, _colorSpeed);
+		gameObject.transform.GetChild (4).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (4).GetComponent<SpriteRenderer> ().color, _desertGrass, _colorSpeed);
+
+		gameObject.transform.GetChild (5).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (5).GetComponent<SpriteRenderer> ().color, _fadeOut, _colorSpeed);
+		gameObject.transform.GetChild (6).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (6).GetComponent<SpriteRenderer> ().color, _fadeOut, _colorSpeed);
+
 	}
 
 	private void ChangeSpeed ()
@@ -106,13 +114,16 @@ public class Planet : MonoBehaviour
 		if (GameLogic.Instance.CurrentStatus == GameLogic.Status.Lift || GameLogic.Instance.CurrentStatus == GameLogic.Status.Travel || GameLogic.Instance.CurrentStatus == GameLogic.Status.Landing) {
 			if (Player.Instance.Target.transform != gameObject.transform) {
 				gameObject.GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
-				gameObject.transform.GetChild (0).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (0).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
-				gameObject.transform.GetChild (1).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (1).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
-				gameObject.transform.GetChild (2).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (2).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
-				gameObject.transform.GetChild (3).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (3).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
-				gameObject.transform.GetChild (4).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (4).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
-				gameObject.transform.GetChild (5).GetComponent<SpriteRenderer> ().color = Color.Lerp (gameObject.transform.GetChild (5).GetComponent<SpriteRenderer> ().color, new Color (1, 1, 1, 0), 0.1f);
+
+				foreach (SpriteRenderer renderer in gameObject.transform.GetComponentsInChildren<SpriteRenderer>()) {
+					renderer.color = Color.Lerp (renderer.color, _fadeOut, 0.5f);
+				}
 			}
 		}
+	}
+
+	private Vector3 GenerateCloudPosition ()
+	{
+		return new Vector3 (Random.Range (-1.5f, 1.5f), Random.Range (-2.0f, 2.0f), 0);
 	}
 }

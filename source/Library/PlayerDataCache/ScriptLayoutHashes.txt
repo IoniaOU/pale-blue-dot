@@ -1,6 +1,6 @@
 iOS
 PlayerPath?
-/Users/mustafatufan/Desktop/git/pale-blue-dot/release/pale-blue-dot
+/Users/mustafatufan/Desktop/git/pale-blue-dot/release/ios
 SceneListBegin?
 Assets/Scene/Game.unity
 SceneListEnd?
