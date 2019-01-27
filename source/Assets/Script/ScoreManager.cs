@@ -27,7 +27,11 @@ public class ScoreManager : MonoBehaviour
 	public void IncreaseScore ()
 	{
 		score++;
+	}
 
+	public void DecreaseScore()
+	{
+		score -= 5;
 	}
 
 	public void Animate ()

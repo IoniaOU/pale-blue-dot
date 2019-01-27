@@ -52,14 +52,18 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\FullTiltBoogie\RotateFlareHolder.cs" />
+     <Compile Include="Assets\Script\BadPlanet.cs" />
      <Compile Include="Assets\Script\GameLogic.cs" />
      <Compile Include="Assets\Script\HudControl.cs" />
      <Compile Include="Assets\Script\LevelBuilder.cs" />
+     <Compile Include="Assets\Script\MenuManager.cs" />
+     <Compile Include="Assets\Script\PaleBlueBehaviour.cs" />
      <Compile Include="Assets\Script\Planet.cs" />
      <Compile Include="Assets\Script\Player.cs" />
      <Compile Include="Assets\Script\ScoreManager.cs" />
      <Compile Include="Assets\Script\Slower.cs" />
      <Compile Include="Assets\Script\TargetLine.cs" />
+     <Compile Include="Assets\Script\TitleAnim.cs" />
      <None Include="Assets\FullTiltBoogie\Helpers\readme.txt" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>

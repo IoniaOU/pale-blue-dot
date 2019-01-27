@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TargetLine : MonoBehaviour {
 
+	public bool haveChance = false;
+
 	private static TargetLine _instance;
 
 	public static TargetLine Instance {
@@ -44,6 +46,9 @@ public class TargetLine : MonoBehaviour {
 				if (Mathf.Abs (planet.transform.position.x) < distance) {
 					distance = Mathf.Abs (planet.transform.position.x);
 					possibleTarget = planet;
+					if (planet.GetComponent<Planet> ().CurrentType == Planet.PlanetType.Life) {
+						haveChance = true;
+					}
 				}
 			}
 		}

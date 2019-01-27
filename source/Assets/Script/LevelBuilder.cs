@@ -18,8 +18,9 @@ public class LevelBuilder : MonoBehaviour
 	}
 
 	public GameObject Planet;
+	public GameObject HotPlanet;
 	public Sprite[] PlanetContinent;
-	public List<GameObject> PlanetList = new List<GameObject>();
+	public List<GameObject> PlanetList = new List<GameObject> ();
 
 	void Start ()
 	{
@@ -31,24 +32,29 @@ public class LevelBuilder : MonoBehaviour
 		
 	}
 
-	public void StopPlanets()
+	public void StopPlanets ()
 	{
 		foreach (GameObject planet in PlanetList) {
 			planet.GetComponent<Planet> ().Stop ();
 		}
 	}
 
-	private void StartRound()
+	private void StartRound ()
 	{
 		GameLogic.Instance.CurrentStatus = GameLogic.Status.Shoot;
-		for (int i = 0; i < getPlanetCount (); i++) {
-			GameObject planet = GeneratePlanet (getPlanetSpeed ()*getOrbit (), getPlanetRadius (), getPlanetPosition (), getPlanetSize (), getPlanetDelay (), getPlanetHealth (), getPlanetReduceRate (), GetPlanetAngle (), SelectContinent (PlanetContinent));
+		for (int i = 0; i < getPlanetCount (5,15); i++) {
+			GameObject planet = GeneratePlanet (global::Planet.PlanetType.Life, getPlanetSpeed () * getOrbit (), getPlanetRadius (), getPlanetPosition (), getPlanetSize (0.1f, 0.2f), getPlanetDelay (), getPlanetHealth (), getPlanetReduceRate (), GetPlanetAngle (), SelectContinent (PlanetContinent));
+			PlanetList.Add (planet);
+		}
+		for (int i = 0; i < getPlanetCount (5,10); i++) {
+			GameObject planet = GeneratePlanet (global::Planet.PlanetType.Hot, getPlanetSpeed () * getOrbit (), getPlanetRadius (), getPlanetPosition (), getPlanetSize (0.05f, 0.15f), getPlanetDelay (), getPlanetHealth (), getPlanetReduceRate (), GetPlanetAngle (), SelectContinent (PlanetContinent));
 			PlanetList.Add (planet);
 		}
 	}
 
-	public void FinishRound()
+	public void FinishRound ()
 	{
+		TargetLine.Instance.haveChance = false;
 		foreach (GameObject planet in PlanetList) {
 			if (Player.Instance.Target.transform != planet.transform) {
 				Destroy (planet);
@@ -59,11 +65,18 @@ public class LevelBuilder : MonoBehaviour
 		StartRound ();
 	}
 
-	private GameObject GeneratePlanet (float speed, float radius, float position, float size, float delay, float health, float reduceRate, float angle, Sprite continent)
+	private GameObject GeneratePlanet (Planet.PlanetType type, float speed, float radius, float position, float size, float delay, float health, float reduceRate, float angle, Sprite continent)
 	{
 		float x = Player.Instance.transform.position.x + getHorizantalChange ();
 		float y = Player.Instance.transform.position.y + (getOrbit () * radius) + position + 3;
-		GameObject planet = Instantiate (Planet, new Vector3 (x, y, 0), Quaternion.identity) as GameObject;
+
+		GameObject planet = null;
+		if (type == global::Planet.PlanetType.Life) {
+			planet = Instantiate (Planet, new Vector3 (x, y, 0), Quaternion.identity) as GameObject;
+		} else if (type == global::Planet.PlanetType.Hot) {
+			planet = Instantiate (HotPlanet, new Vector3 (x, y, 0), Quaternion.identity) as GameObject;
+		}
+
 		planet.transform.localScale = new Vector3 (size, size, 0);
 		planet.GetComponent<Planet> ().RotateSpeed = speed;
 		planet.GetComponent<Planet> ().Radius = radius;
@@ -72,12 +85,13 @@ public class LevelBuilder : MonoBehaviour
 		planet.GetComponent<Planet> ().reduceRate = reduceRate;
 		planet.GetComponent<Planet> ().continent = continent;
 		planet.GetComponent<Planet> ().Angle = angle;
+		planet.GetComponent<Planet> ().CurrentType = type;
 		return planet;
 	}
 
-	private int getPlanetCount ()
+	private int getPlanetCount (int min, int max)
 	{
-		return Random.Range (8, 15);
+		return Random.Range (min, max);
 	}
 
 	private float getPlanetSpeed ()
@@ -95,9 +109,9 @@ public class LevelBuilder : MonoBehaviour
 		return Random.Range (-2.0f, 4.0f);
 	}
 
-	private float getPlanetSize ()
+	private float getPlanetSize (float min, float max)
 	{
-		return Random.Range (0.1f, 0.2f);
+		return Random.Range (min, max);
 	}
 
 	private float getPlanetDelay ()

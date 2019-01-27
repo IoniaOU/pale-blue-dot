@@ -6,6 +6,9 @@ public class Player : MonoBehaviour
 {
 	private float SPEED = 0.25f;
 
+
+
+
 	public GameObject Target;
 
 	private static Player _instance;
@@ -72,6 +75,7 @@ public class Player : MonoBehaviour
 		if (Vector3.Distance (gameObject.transform.position, Target.transform.position) < 0.01f) {
 			Debug.Log ("Arrived.");
 			GameLogic.Instance.CurrentStatus = GameLogic.Status.Landing;
+			gameObject.transform.GetChild (0).GetComponent<AudioSource> ().Play ();
 		}
 	}
 
@@ -82,7 +86,11 @@ public class Player : MonoBehaviour
 		if (Vector3.Distance (Camera.main.transform.position, diff) < 0.01f) {
 			Debug.Log ("Landing finished.");
 			LevelBuilder.Instance.FinishRound ();
-			gameObject.transform.GetChild (0).GetComponent<AudioSource> ().Play ();
+			Planet.PlanetType type = Target.GetComponent<Planet> ().CurrentType;
+			if (type != Planet.PlanetType.Life) {
+				GameLogic.Instance.ShowGameOver ("Homo sapiens have missed next blue dot.");
+				GameLogic.Instance.CurrentStatus = GameLogic.Status.Gameover;
+			}
 		}
 	}
 
