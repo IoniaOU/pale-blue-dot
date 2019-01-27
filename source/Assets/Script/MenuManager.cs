@@ -30,7 +30,8 @@ public class MenuManager : MonoBehaviour
 	void Update ()
 	{
 		if ((Input.touchCount > 0 || Input.GetKeyDown (KeyCode.Space)) && (paleBlueDot.activeSelf)) {
-			paleBlueDot.gameObject.GetComponent<Animator> ().SetTrigger ("PlayPaleBlueDot");
+			Debug.Log ("Anim started");
+			paleBlueDot.GetComponent<Animator> ().SetTrigger ("PlayLast");
 		}
 	}
 
